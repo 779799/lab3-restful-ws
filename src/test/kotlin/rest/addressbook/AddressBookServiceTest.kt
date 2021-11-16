@@ -44,6 +44,7 @@ class AddressBookServiceTest {
         // Verify that GET /contacts is well implemented by the service, i.e
         // complete the test to ensure that it is safe and idempotent
         //////////////////////////////////////////////////////////////////////
+
         // After the GET request, the state of addressBook should not change
         checkAddressBookIsModified(initialId, initialList, false)
     }
@@ -83,8 +84,10 @@ class AddressBookServiceTest {
         // Verify that POST /contacts is well implemented by the service, i.e
         // complete the test to ensure that it is not safe and not idempotent
         //////////////////////////////////////////////////////////////////////
+
         //It's not safe: after the POST request, addressBook has been modified
         checkAddressBookIsModified(initialId, initialList, true)
+
         //It's not idempotent: the same POST request returns a different response
         var secondPostResponse = restTemplate.postForEntity("http://localhost:$port/contacts", juan, Person::class.java)
         assertNotEquals(firstPostResponse, secondPostResponse)
@@ -136,6 +139,7 @@ class AddressBookServiceTest {
         // Verify that GET /contacts/person/3 is well implemented by the service, i.e
         // complete the test to ensure that it is safe and idempotent
         //////////////////////////////////////////////////////////////////////
+
         // After the GET request, the state of addressBook should not modify
         checkAddressBookIsModified(initialId, initialList, false)
     }
@@ -164,6 +168,7 @@ class AddressBookServiceTest {
         // Verify that GET /contacts is well implemented by the service, i.e
         // complete the test to ensure that it is safe and idempotent
         //////////////////////////////////////////////////////////////////////
+
         // After the GET request, the state of addressBook should not modify
         checkAddressBookIsModified(initialId, initialList, false)
     }
@@ -208,9 +213,11 @@ class AddressBookServiceTest {
         // Verify that PUT /contacts/person/2 is well implemented by the service, i.e
         // complete the test to ensure that it is idempotent but not safe
         //////////////////////////////////////////////////////////////////////
+
         //It's not safe: after the PUT request, the content of
         // addressBook.personList has been modified
         assertNotEquals(initialList, addressBook.personList)
+
         //It's idempotent: the same PUT request returns the same response
         var secondPutResponse = restTemplate.exchange(juanURI, HttpMethod.PUT, HttpEntity(maria), Person::class.java)
         assertEquals(firstPutResponse, secondPutResponse)
@@ -238,9 +245,11 @@ class AddressBookServiceTest {
         // Verify that DELETE /contacts/person/2 is well implemented by the service, i.e
         // complete the test to ensure that it is idempotent but not safe
         //////////////////////////////////////////////////////////////////////
+
         //It's not safe: after the DELETE request, the content of
         // addressBook.personList has been modified
         assertNotEquals(initialList, addressBook.personList)
+        
         //It's idempotent: the same DELETE request returns the same response
         restTemplate.execute(juanURI, HttpMethod.DELETE, {}, { assertEquals(204, it.statusCode.value()) })
     }
